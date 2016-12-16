@@ -21,7 +21,6 @@ namespace GridDomain.Tests.SampleDomain
             await router.RegisterAggregate(SampleAggregatesCommandHandler.Descriptor);
             await router.RegisterProjectionGroup(new SampleProjectionGroup(_locator));
             await router.RegisterHandler<SampleAggregateChangedEvent, SampleProjectionBuilder>(m => m.SourceId);
-
         }
     }
 }

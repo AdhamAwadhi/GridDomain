@@ -1,6 +1,6 @@
 namespace GridDomain.CQRS.Messaging.MessageRouting
 {
-    public interface IProjectionGroup : IProjectionGroupDescriptor
+    public interface IProjectionGroup
     {
         void Project(object message);
     }

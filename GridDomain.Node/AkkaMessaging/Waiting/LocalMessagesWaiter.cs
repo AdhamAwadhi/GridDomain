@@ -23,7 +23,7 @@ namespace GridDomain.Node.AkkaMessaging.Waiting
 
         private readonly TimeSpan _defaultTimeout;
         public abstract ExpectBuilder<T> ExpectBuilder { get; }
-        private readonly List<Type> _messageTypesToSubscribe = new List<Type>();
+        private readonly HashSet<Type> _messageTypesToSubscribe = new HashSet<Type>();
         private readonly ActorSystem _system;
 
         public LocalMessagesWaiter(ActorSystem system, IActorSubscriber subscriber, TimeSpan defaultTimeout)
@@ -39,7 +39,9 @@ namespace GridDomain.Node.AkkaMessaging.Waiting
         {
             _filters.Add(filter);
             _stopCondition = stopCondition;
-            _messageTypesToSubscribe.Add(type);
+
+            if(!_messageTypesToSubscribe.Contains(type))
+                _messageTypesToSubscribe.Add(type);
         }
 
         public IExpectBuilder<T> Expect<TMsg>(Predicate<TMsg> filter = null)
@@ -56,7 +58,7 @@ namespace GridDomain.Node.AkkaMessaging.Waiting
             using (var inbox = Inbox.Create(_system))
             {
                 foreach(var type in _messageTypesToSubscribe)
-                _subscriber.Subscribe(type, inbox.Receiver);
+                  _subscriber.Subscribe(type, inbox.Receiver);
 
                 var finalTimeout = timeout ?? _defaultTimeout;
 

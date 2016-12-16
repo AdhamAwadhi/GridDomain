@@ -46,8 +46,6 @@ namespace GridDomain.Node
         private TransportMode _transportMode;
         public ActorSystem[] Systems;
 
-        private Quartz.IScheduler _quartzScheduler;
-
         private readonly IContainerConfiguration _configuration;
         private readonly IQuartzConfig _quartzConfig;
         private readonly Func<ActorSystem[]> _actorSystemFactory;
@@ -112,7 +110,6 @@ namespace GridDomain.Node
             ConfigureContainer(Container, _quartzConfig, System);
 
             Transport = Container.Resolve<IActorTransport>();
-            _quartzScheduler = Container.Resolve<Quartz.IScheduler>();
             _commandExecutor = Container.Resolve<ICommandExecutor>();
             _waiterFactory = Container.Resolve<IMessageWaiterFactory>();
 
@@ -181,15 +178,6 @@ namespace GridDomain.Node
             _log.Debug("GridDomain node {Id} is stopping", Id);
             _stopping = true;
             Container?.Dispose();
-
-            try
-            {
-                _quartzScheduler?.Shutdown(false);
-            }
-            catch (Exception ex)
-            {
-                _log.Warn($"Got error on quartz scheduler shutdown: {ex}");
-            }
 
             if (System != null)
             {

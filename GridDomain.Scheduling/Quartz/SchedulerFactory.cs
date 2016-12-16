@@ -10,7 +10,7 @@ using Quartz.Util;
 
 namespace GridDomain.Scheduling.Quartz
 {
-    public class SchedulerFactory : ISchedulerFactory, IDisposable
+    public class SchedulerFactory : ISchedulerFactory
     {
         private readonly IQuartzConfig _config;
         private readonly ILoggingSchedulerListener _loggingSchedulerListener;
@@ -18,6 +18,8 @@ namespace GridDomain.Scheduling.Quartz
         private readonly IJobFactory _jobFactory;
         private static readonly object _locker = new object();
         private IScheduler _current;
+        private readonly IRetrySettings _retrySettings;
+
         public SchedulerFactory(
             IQuartzConfig config,
             ILoggingSchedulerListener loggingSchedulerListener,
@@ -88,15 +90,6 @@ namespace GridDomain.Scheduling.Quartz
             }
             
             return scheduler;
-        }
-        bool _disposing = false;
-        private readonly IRetrySettings _retrySettings;
-
-        public void Dispose()
-        {
-            if (!_disposing)
-                 ((StdScheduler)_current)?.Dispose();
-            _disposing = true;
         }
     }
 }

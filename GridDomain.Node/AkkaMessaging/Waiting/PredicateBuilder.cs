@@ -22,7 +22,7 @@ namespace GridDomain.Node.AkkaMessaging.Waiting
         {
             var invokedExpr = Expression.Invoke(expr2, expr1.Parameters.Cast<Expression>());
             return Expression.Lambda<Func<T, bool>>
-                (Expression.AndAlso(expr1.Body, invokedExpr), expr1.Parameters);
+                  (Expression.AndAlso(expr1.Body, invokedExpr), expr1.Parameters);
         }
     }
 }
